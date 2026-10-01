@@ -110,5 +110,8 @@ The project is published primarily as a practical example and starting point for
 
 ---
 
-© Mojtaba Golnouri
+## License
+
+© Mojtaba Golnouri  
 GitHub: https://github.com/golnouri
+
