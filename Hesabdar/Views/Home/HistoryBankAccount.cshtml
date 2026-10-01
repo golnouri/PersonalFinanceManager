@@ -1,0 +1,83 @@
+﻿@model IEnumerable<Hesabdar.Models.BankAccountHistory>
+@using Hesabdar.Utility
+@{
+    ViewData["Title"] = "سابقه تغییرات حساب";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    int fk_bankAccount = Convert.ToInt32(TempData["FKBankID"]);
+}
+<div class="accordion-body" style="padding-bottom: 10px;">
+    @{
+        if(Model.Count() == 0)
+        {
+            <div style="text-align:center;padding:5px;">
+                گزارشی برای نمایش وجود ندارد.
+            </div>
+        }
+        else
+        {
+            <ul class="list-group" id="historyList" style="padding-right:0">
+                @foreach (var item in Model)
+                {
+                    <li class="list-group-item" style="line-height: 30px; margin-bottom: 10px; border-top: 1px solid rgba(0, 0, 0, .125) !important;">
+                        <span style="color: black;"><span>@item.bankname </span></span>
+                        <span> </span><span style="float: left;">@General.ConvertToPersianDate(@item.regdate)</span>
+
+                        <div style="margin-bottom: 6px; padding-bottom: 8px;">
+                            @{
+                                if(item.typemoney != "SS")
+                                {
+                                    <span>
+                                        مبلغ قبلی: @String.Format("{0:N0}", item.CurrentMoney)
+                                    </span>
+                                    <br />
+                                    <span>
+                                        مبلغ بروز شده: @String.Format("{0:N0}", item.UpdateMoney)
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span>
+                                        مبلغ قبلی: @item.CurrentMoney
+                                    </span>
+                                    <br />
+                                    <span>
+                                        مبلغ بروز شده: @item.UpdateMoney
+                                    </span>
+                                }
+                            }
+
+                        </div>
+
+                        <a href="/Home/DeleteHistory/@item.id" class="btn btn-light" style="width: 100%; margin-bottom: 2px;" onclick="return confirm('آیا از حذف این گزارش اطمینان دارید؟');">
+                            حذف
+                        </a>
+                    </li>
+                }
+            </ul>
+
+            <button id="loadMoreBtn" class="btn btn-primary" style="width: 100%; margin-bottom: 2px;">
+                موارد بیشتر
+            </button>
+        }
+    }
+
+</div>
+
+<script src="~/js/jquery-3.6.0.min.js"></script>
+<script>
+    var skip = 30; // تعداد رکوردهای اولیه
+    var typemoney = '@TempData["typeMoney"]';
+    $("#loadMoreBtn").click(function () {
+        $.ajax({
+            url: '@Url.Action("LoadMoreHistory", "Home")',
+            type: 'GET',
+            data: { id: '@fk_bankAccount', skip: skip, type: typemoney },
+            success: function (response) {
+                $("#historyList").append(response);
+                skip += 30; // افزایش تعداد رکوردها برای بارگذاری بیشتر
+            }
+        });
+    });
+</script>

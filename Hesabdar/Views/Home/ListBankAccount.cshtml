@@ -1,0 +1,28 @@
+﻿@model IEnumerable<Hesabdar.Models.BankAccountModel>
+
+@{
+    ViewData["Title"] = "مدیریت حساب ها";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table class="table">
+
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.title)
+            </td>
+
+            <td style="text-align:left">
+                    <a asp-action="EditBankAccount" asp-route-id="@item.id" class="btn btn-light">ویرایش</a>
+                    <a href="/Home/DeleteBankAccount/@item.id" class="btn btn-danger"
+                       onclick="return confirm('آیا مطمئن هستید که می‌خواهید این مورد را حذف کنید؟');">
+                        حذف
+                    </a>
+
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

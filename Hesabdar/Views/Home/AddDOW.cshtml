@@ -1,0 +1,174 @@
+﻿@model Hesabdar.Models.DepositOrWithdrawModel
+
+@{
+    ViewData["Title"] = "واریز یا برداشت";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddDOW">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">    
+                    <label asp-for="subject" class="control-label"></label>
+                    <select asp-for="subject" class="form-control" id="subject">
+                        <option value="true">واریز</option>
+                        <option value="false">برداشت</option>
+                    </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="money" class="control-label"></label>
+                <input asp-for="money" class="form-control" autocomplete="off" />
+                <span asp-validation-for="money" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="description" class="control-label"></label>
+                <input asp-for="description" class="form-control" />
+            </div>
+           @*  <div class="form-group">
+                <label asp-for="deposit_which_month" class="control-label"></label>
+                <select name="TemporaryData" class="form-control">
+                    <option value="1">برای ماه جاری (@ViewBag.CurrentDate)</option>
+                    <option value="0">برای ماه قبل (@ViewBag.LastMonthDate)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">نوع عملیات:</label>
+                <select class="form-control" name="flgControl" id="operationType">
+                    <option value="0">بدون واریز یا برداشت از حساب</option>
+                    <option value="2">واریز یا برداشت به حساب</option>
+                    <option value="1">واریز به حساب بدون محاسبه درآمد</option>
+                </select>
+            </div> *@
+
+            <div class="form-group" id="bankAccountSection">
+                <label asp-for="fk_bank_account" class="control-label"></label>
+                <select asp-for="fk_bank_account" class="form-control">
+                    @foreach (var item in ViewBag.BankAcountList)
+                    {
+                        <option value="@item.id">@item.title</option>
+                    }
+                    <option value="0">بدون حساب بانکی</option>
+                </select>
+            </div>
+
+            <input type="hidden" name="istransfer" id="istransfer" value="false" />
+
+             <div class="form-group form-check" style="margin-top:15px;">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="status" style="margin-top:13px" id="statusCheckbox" />
+                    <label style="margin-right: 22px;">@Html.DisplayNameFor(model => model.status)</label>
+                </label>
+                <input type="hidden" name="status" id="hiddenStatus" value="false" />
+            </div> 
+            <div class="form-group">
+                <input type="submit" value="ثبت" class="btn btn-primary" style="width:100%" />
+            </div>
+        </form>
+    </div>
+
+    <div class="col-md-8  d-none d-md-block">
+        <strong>راهنما</strong>
+        <ol>
+            <li>چنانچه تیک "در محاسبات اعمال شود" را فعال کنید به حساب مورد نظر اضافه یا کم می شود.</li>
+
+            <li>
+                حساب های ارزی در این مدل قرار نمی گیرند.
+            </li>
+            <li>
+                تمامی موارد درخواست شده را وارد نمایید.
+            </li>
+            <li>
+                ثبت توضیحات می تواند در آینده به تشریح واریز یا برداشت کمک کند. 
+            </li>
+        </ol>
+    </div>
+</div>
+
+@if (ViewBag.nullBankAccount != null)
+{
+    <script>
+        alert("هیچ حساب بانکی ثبت نشده است. لطفاً ابتدا یک حساب بانکی ثبت کنید");
+    </script>
+}
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.getElementById('money').addEventListener('input', function (e) {
+            let value = e.target.value.replace(/[^0-9]/g, '');
+            value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            e.target.value = value;
+        });
+
+        document.getElementById('money').addEventListener('keypress', function (e) {
+            if (!/[0-9]/.test(e.key)) {
+                e.preventDefault();
+            }
+        });
+    </script>
+
+    <script>
+        document.getElementById('operationType').addEventListener('change', function () {
+            var selectedValue = this.value;
+            var bankAccountSection = document.getElementById('bankAccountSection');
+            var statusCheckbox = document.getElementById('statusCheckbox');
+            var hiddenStatus = document.getElementById('hiddenStatus');
+            var istransfer = document.getElementById('istransfer');
+
+            if (selectedValue === "1") {
+                // تیک چک‌باکس بخورد و غیرفعال شود
+                statusCheckbox.checked = true;
+                hiddenStatus.value = "true"; // فیلد مخفی را به true تنظیم کنید
+                statusCheckbox.disabled = true; // چک‌باکس غیرفعال شود
+                bankAccountSection.style.display = "inherit"; // در صورت نیاز بخش حساب بانکی را نمایش دهید
+                istransfer.value = "true";
+            } else if (selectedValue === "2") {
+                // واریز یا برداشت به حساب
+                statusCheckbox.checked = true; // چک‌باکس غیرفعال می‌شود
+                hiddenStatus.value = "false"; // فیلد مخفی به false تنظیم می‌شود
+                statusCheckbox.disabled = false; // چک‌باکس فعال می‌شود
+                bankAccountSection.style.display = "inherit"; // بخش حساب بانکی نمایش داده می‌شود
+                istransfer.value = "false";
+            } else if (selectedValue === "0") {
+                // بدون واریز یا برداشت از حساب
+                statusCheckbox.checked = false; // چک‌باکس غیرفعال می‌شود
+                hiddenStatus.value = "false"; // فیلد مخفی به false تنظیم می‌شود
+                statusCheckbox.disabled = true; // چک‌باکس غیرفعال می‌شود
+                bankAccountSection.style.display = "none"; // بخش حساب بانکی پنهان می‌شود
+                istransfer.value = "false";
+            }
+        });
+
+        document.getElementById('subject').addEventListener('change', function () {
+            var subjectValue = this.value;
+            var operationType = document.getElementById('operationType');
+
+            if (subjectValue === "false") { // اگر برداشت انتخاب شد
+                // حذف گزینه واریز به حساب بدون محاسبه درآمد
+                for (var i = 0; i < operationType.options.length; i++) {
+                    if (operationType.options[i].value === "1") {
+                        operationType.remove(i);
+                        break; // فقط یک بار حذف کنید
+                    }
+                }
+            } else if (subjectValue === "true") { // اگر واریز انتخاب شد
+                // اضافه کردن گزینه واریز به حساب بدون محاسبه درآمد (اگر حذف شده باشد)
+                var optionExists = false;
+                for (var i = 0; i < operationType.options.length; i++) {
+                    if (operationType.options[i].value === "1") {
+                        optionExists = true;
+                        break;
+                    }
+                }
+                if (!optionExists) {
+                    var option = new Option("واریز به حساب بدون محاسبه درآمد", "1");
+                    operationType.add(option);
+                }
+            }
+        });
+    </script>
+}

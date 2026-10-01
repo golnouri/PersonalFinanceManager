@@ -1,0 +1,139 @@
+@font-face {
+    font-family: 'BBCNasim';
+    src: url('../font/Sahel.eot?#') format('eot'), url('../font/Sahel.woff') format('woff'), url('../font/Sahel.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+.btn-primary {
+    color: black !important;
+    background-color: rgb(238, 245, 255) !important;
+    border-color: #97bff9 !important
+}
+html {
+    font-size: 11px;
+}
+.lblMerg {
+    background-color: orange;
+    color: white !important;
+    border-radius: 5px;
+    font-size: 8pt;
+    padding: 0px;
+    padding-right: 0px;
+    padding-left: 0px;
+    padding-right: 4px;
+    padding-left: 4px;
+    border: 2px solid white;
+    float:left;
+    line-height:22px;
+}
+
+
+@media (max-width: 768px) {
+    .container-fluid {
+        padding-bottom: 7px !important;
+        padding-top: 6px !important;
+    }
+}
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+
+}
+a{
+    text-decoration:none;
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+button{
+    height:49px;
+    min-width:80px;
+}
+input, select{
+    height:50px;
+}
+input, .form-control, .btn, .accordion-button {
+    font-size: 10pt !important;
+}
+body {
+    margin-bottom: 60px;
+    font-family: 'BBCNasim';
+    font-size:10pt !important;
+}
+
+.pb-3 {
+    direction: rtl;
+    line-height: 40px;
+}
+
+input[type=submit] {
+    margin-bottom: 16px;
+    margin-top: 16px;
+}
+
+#money {
+    text-align: left;
+    direction: ltr;
+}
+
+.footerBo{
+    direction:rtl;
+    text-align:center;
+}
+
+header{
+    direction:rtl;
+}
+
+.form-check-input {
+    float: right !important;
+    margin-top: 10px;
+}
+
+.PK li {
+    /*background-color: #eff3fb;*/
+    border-radius: 3px;
+    padding-right: 19px;
+    margin-bottom: 4px;
+    padding: 5px;
+    padding-right: 6px;
+    padding-right: 15px;
+    border: 1px solid #d7deec;
+    text-align:center;
+}
+    .PK li a {
+        color: #0d6efd !important;
+    }
+
+.Deposide {
+    border: 0;
+    /*background-color: #deffe0;*/
+    margin-bottom: 5px;
+    border-radius: 4px;
+    border: 1px solid #e1e5e8 !important;
+    margin-bottom:10px;
+}
+
+.Draw {
+    border: 0;
+    /*background-color: #fff0eb;*/
+    margin-bottom: 5px;
+    border-radius: 4px;
+    border: 1px solid #e1e5e8 !important;
+    margin-bottom: 10px;
+}
+
+.transfer {
+    border: 0;
+    background-color: #eaeaea;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    border: 1px solid #b3b3b3 !important;
+}

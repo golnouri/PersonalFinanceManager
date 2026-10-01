@@ -1,0 +1,102 @@
+﻿@model Hesabdar.Models.BankAccountModel
+
+@{
+    ViewData["Title"] = "ثبت حساب جدید";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="row">
+    <div class="col-md-4">
+        <p style="line-height: 29px;background-color: #fffbde;border-radius: 3px;padding: 5px;font-size: 10pt; margin-bottom: 5px;">
+            مبلغ را برای نوع حساب: ارز و دیگر موارد می توانید با نقطه (.) وارد نمایید. (مثلا: 10.25)
+        </p>
+        <form asp-action="SaveBankAccount">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="title" class="control-label"></label>
+                <input asp-for="title" class="form-control" />
+                <span asp-validation-for="title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="type" class="control-label"></label>
+                <select asp-for="type" class="form-control" id="type-selector">
+                    <option value="FA">تومان</option>
+                    <option value="BR">بورس</option>
+                    <option value="SS">ارز بین المللی</option>
+                    <option value="OR">دیگر موارد...</option>
+                </select>
+                <span asp-validation-for="type" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="money" class="control-label"></label>
+                <input asp-for="money" class="form-control" id="money" autocomplete="off" value="0" />
+           @*      <span asp-validation-for="money" class="text-danger"></span> *@
+            </div>
+
+
+
+            <div class="form-group">
+                <input type="submit" value="ثبت حساب" class="btn btn-primary" style="width:100%" />
+            </div>
+        </form>
+    </div>
+
+    <div class="col-md-8  d-none d-md-block">
+        <strong>راهنما</strong>
+        <ol>
+            <li>واحد پولی نرم افزار حسابدار، تومان می باشد.</li>
+            <li>
+                موجودی نوع حساب های: تومان و بورس در محاسبات اعمال می شوند.
+            </li>
+            <li>
+                امکان ویرایش حساب های ثبت شده از طریق منوهای اصلی وجود دارد.
+            </li>
+            <li>
+                نام حساب را به صورت فارسی وارد نمایید.
+            </li>
+            <li>
+                پس از ثبت حساب کمی، صبر کنید تا فعالیت انجام شود.
+            </li>
+            
+        </ol>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.getElementById('type-selector').addEventListener('change', function () {
+            let selectedType = this.value;
+            let moneyInput = document.getElementById('money');
+
+            if (selectedType === 'SS' || selectedType === 'OR') {
+                // اجازه دادن به وارد کردن نقطه و عدد، و غیرفعال کردن جدا کردن سه رقمی
+                moneyInput.removeEventListener('input', formatMoney);
+                moneyInput.addEventListener('input', allowDecimalAndNumber);
+            } else {
+                // فقط اجازه وارد کردن عدد و جدا کردن سه رقمی
+                moneyInput.removeEventListener('input', allowDecimalAndNumber);
+                moneyInput.addEventListener('input', formatMoney);
+            }
+        });
+
+        // تابع برای اجازه وارد کردن عدد و نقطه
+        function allowDecimalAndNumber(e) {
+            let value = e.target.value.replace(/[^0-9.]/g, '');
+            e.target.value = value;
+        }
+
+        // تابع برای قالب‌بندی عدد به صورت سه رقم سه رقم
+        function formatMoney(e) {
+            let value = e.target.value.replace(/[^0-9]/g, '');
+            value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            e.target.value = value;
+        }
+
+        // اولین بار بر اساس مقدار پیش‌فرض dropdown تنظیم شود
+        document.getElementById('type-selector').dispatchEvent(new Event('change'));
+
+    </script>
+}

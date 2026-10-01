@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>حسابدار - @ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Hesabdar.styles.css" asp-append-version="true" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom mb-3">
+            <div class="container-fluid">
+
+                <a class="navbar-brand" href="/Home/Index" style="display: flex; align-items: center;margin-right:5px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1.5 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 1 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.793 8.5H2a.5.5 0 0 1-.5-.5z" />
+                    </svg>
+                </a>
+
+                <a class="navbar-brandB btn btn-primary" href="/Home/AddDOW" style="display: flex; align-items: center;display:none;padding-right:8px;color:white;  margin-right: 1px;padding:5px;">
+                    واریز یا برداشت
+                </a>
+
+
+                <!-- دکمه برای باز کردن Modal -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" style="border:0 !important;font-size:15pt;text-align:left !important;padding-left:0 !important;border:0 !important;outline: none; box-shadow: none;">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Modal Structure -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <ul class="navbar-nav PK" style="padding-right:0 !important">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/Home/Index">داشبورد کاربری</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/Home/AddBankAccount">ثبت حساب جدید</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/Home/ListBankAccount">مدیریت حساب ها</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/Home/AddDOW">واریز یا برداشت</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/Home/AddNote">ثبت متن</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Home/Help" class="nav-link">راهنما</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/User/LogOut">خروج</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="width:100%">بستن منوها</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">داشبورد</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AddBankAccount">ثبت حساب جدید</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ListBankAccount">مدیریت حساب ها</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AddDOW">واریز یا برداشت</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AddNote">ثبت متن</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/Home/Help" class="nav-link text-dark">راهنما</a>
+                            
+                        
+                        
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="LogOut">خروج</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <div style="width:100%;height:24px;"></div>
+    <footer class="border-top footer text-muted" style="line-height:75px !important;">
+        <div class="container footerBo">
+            &copy; 1403 - فارسلن | نسخه: 1.0.0 | <a href="http://farslan.ir/about?page=Privacy#Privacy" target="_blank">حریم خصوصی</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

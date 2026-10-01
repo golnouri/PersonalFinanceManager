@@ -1,0 +1,391 @@
+﻿@{
+    ViewData["Title"] = "داشبورد";
+}
+
+<style>
+    .navbar-brand {
+        display: none !important
+    }
+
+    .navbar-brandB {
+        display: inherit !important
+    }
+
+    .styleMOneySub {
+        display: flex;
+        width: 100%;
+        background-color: #f5f5ff;
+        border-radius: 4px;
+        margin-bottom: 3px;
+        padding: 4px;
+        padding-bottom: 4px;
+        padding-bottom: 6px;
+    }
+
+
+</style>
+
+<div>
+    امروز: @ViewBag.CurrentDate (@ViewBag.monthName)
+</div>
+
+<div class="alert-danger" id="alertMessage" style="line-height: 27px;text-align:justify;border-radius:4px;padding:8px;display:none;color:black !important">
+    پس انداز شما تا 3 ماه نمی تواند هزینه های ثابت شما را بدون درآمد پشتیبانی کند. در این حالت سیستم وضعیت شما را ناپایدار در نظر می گیرد.
+</div>
+
+<div class="container mt-3" style="padding:0 !important">
+    <!-- تب های ناوبری -->
+    <ul class="nav nav-tabs" id="myTab" role="tablist" style="padding-right:0">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="menu1-tab" data-bs-toggle="tab" data-bs-target="#menu1" type="button" role="tab" aria-controls="menu1" aria-selected="true">حساب ها</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="menu2-tab" data-bs-toggle="tab" data-bs-target="#menu2" type="button" role="tab" aria-controls="menu2" aria-selected="false">متن ها</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="menu3-tab" data-bs-toggle="tab" data-bs-target="#menu3" type="button" role="tab" aria-controls="menu3" aria-selected="false">هزینه ثابت</button>
+        </li>
+    </ul>
+
+    <!-- محتوای تب ها -->
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="menu1" role="tabpanel" aria-labelledby="menu1-tab">
+            <div style="width:100%;height:7px;"></div>
+            @{
+                var bankAccounts = ViewBag.BankAccount as IEnumerable<BankAccountModel>; // جایگزین کنید با نوع واقعی
+                double result = 0;
+            }
+
+            @if (bankAccounts == null || !bankAccounts.Any())
+            {
+                <p style="line-height: 28px;margin-top: 12px;">
+                    حسابی در نرم افزار ثبت نشده است.
+                    <br />
+                    <a href="/Home/AddBankAccount">ثبت حساب جدید</a>
+                </p>
+            }
+            else
+            {
+                @foreach (var item in bankAccounts)
+                {
+                    var formattedMoney = item.money.ToString("N0", new System.Globalization.CultureInfo("en-US"));
+
+                    if (item.type == "FA" || item.type == "BR")
+                    {
+                        <div class="styleMOneySub" onclick="window.location.href='@Url.Action("HistoryBankAccount", "Home")?id=@item.id'">
+                            <div style="margin-right: 10px;width:50%">
+                                @item.title
+                            </div>
+                            <div style="width:50%;text-align:left;padding-left:9px;" class="money-field">
+                                <span class="fa-numbers">@formattedMoney</span>
+                            </div>
+                        </div>
+                        result += item.money;
+                    }
+                    else
+                    {
+                        <div class="styleMOneySub" style="background-color: #fbfbfb !important;" onclick="window.location.href='@Url.Action("HistoryBankAccount", "Home")?id=@item.id'">
+                            <div style="margin-right: 10px;width:50%">
+                                @item.title
+                            </div>
+                            <div style="width:50%;text-align:left;padding-left:9px;" class="money-field">
+                                <span class="fa-numbers">@item.money</span>
+                            </div>
+                        </div>
+                    }
+                }
+                <div style="display: flex;width:100%;border-radius:4px;margin-bottom:3px;padding: 5px;padding-top: 5px;padding-top: 0px;">
+                    <div style="margin-right: 10px;width:50%;font-weight:bold;">
+                        مجموع موجودی ها:
+                    </div>
+                    <div style="width:50%;text-align:left;padding-left:9px;font-weight:bold;" class="money-field">
+                        <span class="fa-numbers" id="lblSavingMoney">@result.ToString("N0", new System.Globalization.CultureInfo("en-US"))</span>
+                    </div>
+                </div>
+            }
+            <hr style="border-top: 1px solid #958c8c;" />
+        </div>
+        <div class="tab-pane fade" id="menu2" role="tabpanel" aria-labelledby="menu2-tab">
+            <div style="width:100%;height:7px;"></div>
+            @{
+                var Notes = ViewBag.NoteArchives as IEnumerable<NoteModel>;
+            }
+            @if (Notes == null || !Notes.Any())
+            {
+                <p style="line-height: 28px;margin-top: 12px;">
+                    متنی در سیستم ثبت نشده است.
+                    <br />
+                    <a href="/Home/AddNote">ثبت متن جدید</a>
+                </p>
+            }
+            else
+            {
+                foreach (var item in ViewBag.NoteArchives)
+                {
+                    <div class="note-item" data-id="@item.id" data-description="@item.description" style="margin-bottom:3px;background-color:#f5f5ff;border-radius:4px;padding-left:5px;padding-right:9px;cursor:pointer;padding:5px; padding-right: 13px;">
+                        @item.title
+                    </div>
+                }
+                <!-- Bootstrap Modal -->
+                <div class="modal fade" id="descriptionModal" tabindex="-1" role="dialog" aria-labelledby="descriptionModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body" id="modalDescriptionContent" style="line-height:28px;min-height:200px">
+                                <!-- Description content will be injected here -->
+                            </div>
+                            <div class="modal-footer">
+                                <a href="#" class="btn btn-light" id="DeleteNote" style="width:100%;margin-bottom:10px;" onclick="return confirm('آیا مطمئن هستید که می‌خواهید این متن را حذف کنید؟');">حذف</a>
+                                <button type="button" class="btn" id="closeAllModal" style="width:100%;display:none">بستن</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    document.getElementById('closeAllModal').addEventListener('click', function () {
+                        // بستن تمام modals با استفاده از jQuery
+                        $('.modal').modal('hide');
+                    });
+
+                    document.addEventListener('DOMContentLoaded', function () {
+                        // اضافه کردن EventListener به همه div‌هایی که کلاس "note-item" دارند
+                        document.querySelectorAll('.note-item').forEach(function (div) {
+                            div.addEventListener('click', function () {
+                                var description = div.getAttribute('data-description');
+                                var noteId = div.getAttribute('data-id');
+                                // گذاشتن توضیحات داخل modal
+                                document.getElementById('modalDescriptionContent').innerHTML = description.replace(/\n/g, '<br/>');
+                                // بروزرسانی URL دکمه حذف
+                                var deleteUrl = '/Home/DeleteNote/' + noteId;
+                                document.getElementById('DeleteNote').setAttribute('href', deleteUrl);
+                                // نمایش modal
+                                $('#descriptionModal').modal('show');
+                            });
+                        });
+                    });
+                </script>
+            }
+            <hr style="border-top: 1px solid #958c8c;" />
+        </div>
+        <div class="tab-pane fade" id="menu3" role="tabpanel" aria-labelledby="menu3-tab">
+            <div style="width:100%;height:7px;"></div>
+            <p style="margin-bottom:5px;">
+                هزینه ثابت خود را در قالب یک ماه وارد نمایید.
+            </p>
+            <form asp-action="SetMontMoney" method="post">
+                <div class="d-flex" style="margin-bottom:17px;">
+                    <!-- فیلد ورودی با طول 100% -->
+                    <div class="flex-grow-1 me-2" style="margin-right: 0 !important;margin-left: 5px;">
+                        <label for="MoneyMonth" class="visually-hidden">مبلغ:</label>
+                        <input type="text" id="MoneyMonth"
+                               value="@String.Format("{0:N0}", ViewBag.monthmoney ?? 0)"
+                               name="MoneyMonth" class="form-control" />
+                    </div>
+                    <!-- دکمه -->
+                    <button type="submit" class="btn btn-primary">ثبت</button>
+                </div>
+            </form>
+            <hr style="  border-top: 1px solid #958c8c;" />
+        </div>
+    </div>
+</div>
+
+<script>
+    var lblSavingMoney = document.getElementById('lblSavingMoney');
+    var textValue = lblSavingMoney.textContent || lblSavingMoney.innerText;
+
+    // حذف جداکننده‌های سه‌رقمی (کاما) و تبدیل به عدد
+    textValue = parseFloat(textValue.replace(/,/g, ''));
+
+    // تبدیل ViewBag.monthmoney به عدد
+    var monthmoney = parseFloat('@ViewBag.monthmoney'.replace(/,/g, ''));
+
+    // محاسبه resultmoney
+    var resultmoney = textValue / monthmoney;
+
+    // بررسی نتیجه و نمایش div در صورت کمتر بودن از 6
+    if (resultmoney < 3) {
+        var alertDiv = document.getElementById('alertMessage');
+        alertDiv.style.display = 'block';
+    }
+
+
+</script>
+
+
+@{
+    var currentYear = ViewBag.CurrentYear ?? DateTime.Now.Year;
+}
+<div>
+    <div class="container" style="padding-right: 0;padding-left: 0;margin-top:30px;">
+
+        <form asp-action="Index" method="get">
+            <div class="d-flex" style="margin-bottom:17px;">
+                <!-- فیلد ورودی با طول 100% -->
+                <div class="flex-grow-1 me-2" style="margin-right: 0 !important;margin-left: 5px;">
+                    <label for="yearInput" class="visually-hidden">سال:</label>
+                    <input type="text" id="yearInput" name="year" value="@currentYear" class="form-control" min="1403" max="1500" />
+                </div>
+                <!-- دکمه -->
+                <button type="submit" class="btn btn-primary">بروزرسانی</button>
+            </div>
+        </form>
+
+        @foreach (var group in ViewBag.GroupedDeposits)
+        {
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading@group.Key.Month@group.Key.Year">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@group.Key.Month-@group.Key.Year" aria-expanded="true" aria-controls="collapse-@group.Key.Month-@group.Key.Year" style="direction:ltr">
+                            گزارش @group.Key.MonthName @group.Key.Year
+                        </button>
+                    </h2>
+                    <div id="collapse-@group.Key.Month-@group.Key.Year" class="accordion-collapse collapse" aria-labelledby="heading-@group.Key.Month-@group.Key.Year" data-bs-parent="#accordionExample">
+                        <div class="accordion-body" style="padding-bottom: 10px;">
+                            <ul class="list-group" style="padding-right:0">
+                                @{
+                                    double resultMoney = 0;
+                                    double resultAllMoney = 0;
+                                    string nameJet = "";
+                                    string mohasebeTick = "";
+                                    string colorJet = "";
+                                    double bardashtha = 0;
+                                    string chkstatus = "";
+                                }
+                                @foreach (var item in group)
+                                {
+                                    if(item.status == true)
+                                    {
+                                        chkstatus = "محاسبه شده";
+                                    }
+                                    else
+                                    {
+                                        chkstatus = "عدم محاسبه";
+                                    }
+                                    string setClass = "";
+                                    if (item.subject == true)
+                                    {
+                                        setClass = "Deposide";
+                                        if (item.status == true)
+                                        {
+                                            resultMoney = (resultMoney + item.money);
+                                            
+                                        }
+                                        resultAllMoney = (resultAllMoney + item.money);
+                                        nameJet = "واریز:";
+                                        colorJet = "green";
+
+                                    }
+                                    else
+                                    {
+                                        setClass = "Draw";
+                                        nameJet = "برداشت:";
+                                        bardashtha = bardashtha + item.money;
+                                        colorJet = "red";
+                                    }
+
+                                    <li class="list-group-item @setClass" style="line-height: 30px;">
+                                        <span style="color:@colorJet"><span>@nameJet </span> <span>@String.Format("{0:N0}", item.money)</span></span>
+                                        <span> </span><span style="float:left;">@item.regdate</span>
+                                        <div>
+                                            <span style="color:black"><span>@item.BankAccountTitle</span></span>
+                                            <span> </span><span style="float:left;">@chkstatus</span>
+                                        </div>
+                                        @{
+                                            if (item.description == null)
+                                            {
+                                                <div style="font-size: 10pt;margin-bottom:7px;padding-bottom:8px">توضیحات وارد نشده است.</div>
+                                            }
+                                            else
+                                            {
+                                                <div style="text-align:justify;font-size: 10pt;margin-bottom:7px;padding-bottom:8px">@item.description</div>
+                                            }
+                                        }
+                                        <a href="/Home/DeleteDPO/@item.id" class="btn btn-light" style="width: 100%;margin-bottom:2px;" onclick="return confirm('آیا از حذف این گزارش اطمینان دارید؟');">
+                                            حذف
+                                        </a>
+
+                                    </li>
+                                }
+
+                                <li class="list-group-item" style="border:0; line-height: 30px;">
+                                    <span style="color:green">جمع واریزها: @String.Format("{0:N0}", resultAllMoney)</span>
+                                    <br />
+                                    <span style="color:red">جمع برداشت ها: @String.Format("{0:N0}", bardashtha)</span>
+                                    <br />
+                                    @{
+                                        if (ViewBag.monthmoney == null)
+                                        {
+                                            <span style="color:black">برای انجام محاسبات، هزینه ثبت را وارد نمایید.</span>
+                                        }
+                                        else
+                                        {
+                                            double monMon = ViewBag.monthmoney;
+                                            string performance = "";
+                                            int scoreResult = 0;
+
+                                            //اگه درامد 3 برابر هزینه ثابت بود
+                                            if (resultAllMoney >= (monMon * 3))
+                                            {
+                                                scoreResult = (scoreResult + 5);
+                                            }
+                                            //اگه برداشت از حساب ها کمتر از 30 درصد درآمد بود
+                                            if (bardashtha < 0.3 * resultAllMoney)
+                                            {
+                                                scoreResult = (scoreResult + 5);
+                                            }
+
+                                            if(scoreResult == 0)
+                                            {
+                                                performance = "ضعیف";
+                                            }
+                                            if (scoreResult == 5)
+                                            {
+                                                performance = "متوسط";
+                                            }
+                                            if (scoreResult == 10)
+                                            {
+                                                performance = "عالی";
+                                            }
+                                            <span style="color:black">سطح عملکرد: @performance</span>
+
+                                        }
+                                    }
+                                </li>
+
+                                
+
+
+
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- فاصله بین دو لیست کرکره‌ای آکاردئونی -->
+            <div class="mt-3"></div>
+
+        }
+
+
+
+    </div>
+</div>
+@if (TempData["ErrorMessage"] != null)
+{
+    <script>
+        alert('@Html.Raw(TempData["ErrorMessage"])');
+    </script>
+}
+
+<script>
+    document.getElementById('MoneyMonth').addEventListener('input', function (e) {
+        // جلوگیری از وارد کردن حروف یا کاراکترهای غیر از عدد
+        this.value = this.value.replace(/[^0-9]/g, '');
+
+        // اضافه کردن جداکننده سه رقمی
+        this.value = this.value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    });
+</script>

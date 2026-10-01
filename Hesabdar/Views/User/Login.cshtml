@@ -1,0 +1,164 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="حسابدار؛ نرم‌افزاری هوشمند برای مدیریت پس‌انداز و درآمدها با قابلیت‌های ویژه مدیریت حساب‌ها، واریزها و برداشت‌ها، و گزارش حداقل پس‌انداز." />
+    <meta name="keywords" content="حسابدار, مدیریت پس‌انداز, مدیریت درآمد, نرم‌افزار حسابداری, گزارش مالی, فارسلن" />
+    <title>حسابدار: مدیریت پس انداز و درآمد</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Hesabdar.styles.css" asp-append-version="true" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <style>
+
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-blur: 5px; /* This property isn't standard, so you might need a fallback solution */
+            background-size: cover;
+            background-attachment: fixed;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 15px;
+            border-radius: 10px;
+            background: white;
+            /* box-shadow: 0 0 10px rgba(0,0,0,0.1); */
+        }
+
+            .login-container .form-group {
+                margin-bottom: 15px;
+            }
+
+        .text-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+
+        .text-content {
+            max-width: 500px;
+            text-align: center;
+        }
+
+        label {
+            padding-bottom: 8px;
+        }
+
+        @@media (max-width: 767.98px) {
+            .row {
+                display: block;
+            }
+
+            .text-container {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .login-container {
+                width: 100%;
+            }
+
+            .order-first {
+                order: -1;
+            }
+
+            .text-content {
+                margin-bottom: 20px;
+            }
+
+            h6 {
+                font-size: 10pt !important;
+            }
+
+
+        }
+
+        @@media (max-width: 750px) {
+            #listb {
+                padding-top: 30px;
+            }
+
+            #listc {
+                max-width: 95% !important;
+            }
+
+            .login-container {
+                padding-bottom: 25px;
+            }
+
+            #logo {
+                margin-top: 20px;
+            }
+        }
+
+    </style>
+</head>
+<body style="margin-bottom:auto;padding-bottom:inherit;">
+    <div class="container-fluid">
+        <div class="row vh-100">
+            <div class="col-md-4 align-items-center justify-content-center order-md-1 order-first" style="margin:0 auto">
+                <div class="login-container">
+                    <div style="text-align:center;margin-bottom:0px;">
+                        <img src="/img/logo.jpg" id="logo" style="margin-bottom:20px;" />
+                    </div>
+                    <form asp-action="CheckLogin">
+                        <div id="androidapp" style="direction: rtl; text-align: center; background-color: rgb(213, 233, 242); padding: 12px; border-radius: 5px; border: 1px solid rgb(201, 213, 236);margin-bottom: 10px;">
+                            آخرین نسخه اندروید حسابدار: 1.0.0 / <a href="/app/Hesabdar.zip" target="_blank">دانلود کنید.</a>
+                        </div>
+                        <p style="direction: rtl;text-align: justify;  border-bottom: 1px solid #ccc; padding-bottom: 14px;line-height:30px;">
+                             برای ورود به سیستم حسابدار، نیازمند ثبت نام در سایت <a href="http://farslan.ir/">فارسلن</a> هستید.
+                            
+                            آیا ثبت نام نکرده اید؟ <a href="http://farslan.ir/register">ثبت کاربر جدید.</a>
+                        </p>
+
+                        <div class="form-group">
+                            <div style="direction:rtl">
+                                <label for="email">آدرس ایمیل:</label>
+                            </div>
+                            <input type="text" class="form-control" name="email" id="email" autofocus tabindex="0">
+                        </div>
+                        <div class="form-group">
+                            <div style="direction:rtl;">
+                                <label for="password">کلمه عبور:</label>
+                            </div>
+                            <input type="password" class="form-control" name="password" id="password">
+                        </div>
+                        <div class="form-group form-check" style="direction: rtl;">
+                            @Html.CheckBox("rememberMe", new { id = "rememberMe", @class = "form-check-input" })
+                            <label style="margin-right: 22px;margin-top: 8px;">ذخیره اطلاعات ورود!</label>
+                        </div>
+                        <div style="text-align:right">
+                            <button type="submit" class="btn btn-primary btn-block" style="width:100%">ورود</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <script src="/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            setTimeout(
+                function () {
+                    $('#androidapp').slideDown();
+                }, 3000);
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Hesabdar.Models.BankAccountHistory>
+@using Hesabdar.Utility
+
+@foreach (var item in Model)
+{
+    <li class="list-group-item" style="line-height: 30px; margin-bottom: 10px; border-top: 1px solid rgba(0, 0, 0, .125) !important;">
+        <span style="color: black;"><span>@item.bankname </span></span>
+        <span> </span><span style="float: left;">@General.ConvertToPersianDate(@item.regdate)</span>
+
+        <div style="margin-bottom: 6px; padding-bottom: 8px;">
+            @{
+                if (item.typemoney != "SS")
+                {
+                    <span>
+                        مبلغ قبلی: @String.Format("{0:N0}", item.CurrentMoney)
+                    </span>
+                    <br />
+                    <span>
+                        مبلغ بروز شده: @String.Format("{0:N0}", item.UpdateMoney)
+                    </span>
+                }
+                else
+                {
+                    <span>
+                        مبلغ قبلی: @item.CurrentMoney
+                    </span>
+                    <br />
+                    <span>
+                        مبلغ بروز شده: @item.UpdateMoney
+                    </span>
+                }
+            }
+        </div>
+
+        <a href="/Home/DeleteHistory/@item.id" class="btn btn-light" style="width: 100%; margin-bottom: 2px;" onclick="return confirm('آیا از حذف این گزارش اطمینان دارید؟');">
+            حذف
+        </a>
+    </li>
+}
