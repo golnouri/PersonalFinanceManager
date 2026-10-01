@@ -108,8 +108,6 @@ This project was originally developed for personal use, so some parts of the cod
 
 The project is published primarily as a practical example and starting point for developers who are interested in ASP.NET Core, Entity Framework Core, SQLite, and personal finance applications.
 
----
-
 ## License
 
 © Mojtaba Golnouri  
